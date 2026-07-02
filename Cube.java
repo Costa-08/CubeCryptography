@@ -1,147 +1,119 @@
 import java.util.Scanner;
 
-public class Cube{
+public class Cube {
 
-    final int[][] trios = {
-
-        {0,0,0, 1,0,0, 2,0,0},
-        {0,0,0, 0,1,0, 0,2,0},
-        {0,0,0, 0,0,1, 0,0,2},
-        {0,0,0, 1,1,0, 2,2,0},
-        {0,2,0, 1,1,0, 2,0,0},
-        {0,0,1, 1,0,1, 2,0,1},
-        {0,0,1, 0,1,1, 0,2,1},
-        {0,1,0, 0,1,1, 0,1,2},
-        {0,0,1, 1,1,1, 2,2,1},      
-        {0,2,1, 1,1,1, 2,0,1},   
-
-        {0,0,0, 1,1,1, 2,2,2}, // Diagonal Interna 1
-
-        {0,0,2, 1,0,2, 2,0,2},
-        {0,0,2, 0,1,2, 0,2,2},
-        {0,2,0, 0,2,1, 0,2,2},
-        {0,0,2, 1,1,2, 2,2,2},     
-        {0,2,2, 1,1,2, 2,0,2},       
-        {0,1,0, 1,1,0, 2,1,0},
-        {1,0,0, 1,1,0, 1,2,0},
-        {1,0,0, 1,0,1, 1,0,2},
-        {0,0,0, 1,0,1, 2,0,2},     
-        {0,0,2, 1,0,1, 2,0,0},        
-
-        {0,2,0, 1,1,1, 2,0,2}, // Diagonal Interna 2
-
+    final int[][] rota = {
         
-        {0,1,1, 1,1,1, 2,1,1},      
-        {1,0,1, 1,1,1, 1,2,1},
-        {1,1,0, 1,1,1, 1,1,2},
-        {0,1,0, 1,1,1, 2,1,2},       
-        {0,1,2, 1,1,1, 2,1,0}, 
-        
-        {0,1,2, 1,1,2, 2,1,2},
-        {1,0,2, 1,1,2, 1,2,2},
-        {1,2,0, 1,2,1, 1,2,2},
-        {0,2,0, 1,2,1, 2,2,2},        
-        {0,2,2, 1,2,1, 2,2,0}, 
+        // ====================================================================
+        // FASE 1: VARREDURA ORTOGONAL X (Linhas Horizontais)
+        // Mistura a entropia estritamente da esquerda para a direita.
+        // ====================================================================
+        {0,0,0, 1,0,0, 2,0,0}, {0,0,1, 1,0,1, 2,0,1}, {0,0,2, 1,0,2, 2,0,2},
+        {0,1,0, 1,1,0, 2,1,0}, {0,1,1, 1,1,1, 2,1,1}, {0,1,2, 1,1,2, 2,1,2},
+        {0,2,0, 1,2,0, 2,2,0}, {0,2,1, 1,2,1, 2,2,1}, {0,2,2, 1,2,2, 2,2,2},
 
-        {2,0,0, 1,1,1, 0,2,2}, //Diagonal interna 3
+        // ====================================================================
+        // FASE 2: VARREDURA ORTOGONAL Y (Linhas Verticais)
+        // Esmaga a entropia gerada na Fase 1 estritamente de cima para baixo.
+        // ====================================================================
+        {0,0,0, 0,1,0, 0,2,0}, {0,0,1, 0,1,1, 0,2,1}, {0,0,2, 0,1,2, 0,2,2},
+        {1,0,0, 1,1,0, 1,2,0}, {1,0,1, 1,1,1, 1,2,1}, {1,0,2, 1,1,2, 1,2,2},
+        {2,0,0, 2,1,0, 2,2,0}, {2,0,1, 2,1,1, 2,2,1}, {2,0,2, 2,1,2, 2,2,2},
 
-        {0,2,0, 1,2,0, 2,2,0},
-        {2,0,0, 2,1,0, 2,2,0},
-        {2,0,0, 2,0,1, 2,0,2},
-        {0,0,0, 0,1,1, 0,2,2},        
-        {0,0,2, 0,1,1, 0,2,0}, 
+        // ====================================================================
+        // FASE 3: VARREDURA ORTOGONAL Z (Profundidade)
+        // Cruza a entropia acumulada estritamente da frente para trás.
+        // ====================================================================
+        {0,0,0, 0,0,1, 0,0,2}, {0,1,0, 0,1,1, 0,1,2}, {0,2,0, 0,2,1, 0,2,2},
+        {1,0,0, 1,0,1, 1,0,2}, {1,1,0, 1,1,1, 1,1,2}, {1,2,0, 1,2,1, 1,2,2},
+        {2,0,0, 2,0,1, 2,0,2}, {2,1,0, 2,1,1, 2,1,2}, {2,2,0, 2,2,1, 2,2,2},
 
-        {0,2,1, 1,2,1, 2,2,1},
-        {2,0,1, 2,1,1, 2,2,1},
-        {2,1,0, 2,1,1, 2,1,2},
-        {1,0,0, 1,1,1, 1,2,2},         
-        {1,0,2, 1,1,1, 1,2,0}, 
-        
-        {2,2,0, 1,1,1, 0,0,2}, //Diagonal Interna 4
-
-        {0,2,2, 1,2,2, 2,2,2},
-        {2,0,2, 2,1,2, 2,2,2},
-        {2,2,0, 2,2,1, 2,2,2},
-        {2,0,0, 2,1,1, 2,2,2},
-        {2,0,2, 2,1,1, 2,2,0} 
+        // ====================================================================
+        // FASE 4: DIAGONAIS TOROIDAIS ESPACIAIS (Wormholes Disjuntos)
+        // Quebra a simetria ortogonal cruzando os eixos X, Y e Z simultaneamente.
+        // Utiliza aritmética modular para garantir que as diagonais nunca se toquem.
+        // ====================================================================
+        {0,0,0, 1,1,1, 2,2,2}, {0,0,1, 1,1,2, 2,2,0}, {0,0,2, 1,1,0, 2,2,1},
+        {0,1,0, 1,2,1, 2,0,2}, {0,1,1, 1,2,2, 2,0,0}, {0,1,2, 1,2,0, 2,0,1},
+        {0,2,0, 1,0,1, 2,1,2}, {0,2,1, 1,0,2, 2,1,0}, {0,2,2, 1,0,0, 2,1,1}
     };
 
-    private static final long[] CONSTANTES_TOPO = { // Constantes Aleatórias (devem ficar para caso chave=0)
-        0x3243F6A8885A308DL, 0x313198A2E0370734L, 0x4A4093822299F31DL,
-        0x082EFA98EC4E6C89L, 0x452821E638D01377L, 0xBE5466CF34E90C6CL,
-        0xC0AC29B7C97C50DDL, 0x3F84D5B5B5470917L, 0x9216D5D98979FB1BL
+    private static final int[] CONSTANTES = { 
+        0x885A308D, 
+        0x313198A2, 
+        0x2297931D, 0x082EFA98, 0x452821E6, 
+        0xBE5466CF, 0xC0AC29B7, 0x3F84D5B5, 
+        0x9216D5D9, 0x5A8E9C01, 0xFF4012B3
     };
     
-    private static final long[] CONSTANTES_BASE = { // removíveis caso queira expandir o tamanho da chave
-        0x6A09E667F3BCC908L, 0xBB67AE8584CAA73BL, 0x3C6EF372FE94F82BL,
-        0xA54FF53A5F1D36F1L, 0x510E527FADE682D1L, 0x9B05688C2B3E6C1FL,
-        0x1F83D9ABFB41BD6BL, 0x5BE0CD19137E2179L, 0xFD089D82E0608A7BL
-    };
+private int[][][] iniCubo(int[] chave256, int[] nonce192, long contador) {
+        int[][][] cubo = new int[3][3][3];
 
-    private long[][][] iniCubo(long[] chave256, long[] nonce192, long contador) { // Topologia Tridimensional
-        long[][][] cubo = new long[3][3][3];
-        
-        int i = 0;
-        for (int x = 0; x < 3; x++) {
-            for (int z = 0; z < 3; z++) {
-                cubo[x][0][z] = CONSTANTES_TOPO[i++];
-            }
-        }
-        
-        cubo[0][1][0] = chave256[0];
-        cubo[1][1][0] = chave256[1];
-        cubo[2][1][0] = chave256[2];
-        cubo[0][1][1] = chave256[3]; 
-        
-        cubo[1][1][1] = nonce192[0];
-        cubo[2][1][1] = nonce192[1];
-        cubo[0][1][2] = nonce192[2];
-        
-        cubo[1][1][2] = contador;       
-        cubo[2][1][2] = 0L;             
+        cubo[1][1][1] = chave256[0];
+        cubo[1][0][1] = chave256[1];
+        cubo[1][2][1] = chave256[2];
+        cubo[0][1][1] = chave256[3];
+        cubo[2][1][1] = chave256[4];
+        cubo[1][1][0] = chave256[5];
+        cubo[1][1][2] = chave256[6]; 
+        cubo[0][1][0] = chave256[7]; 
 
-        i = 0;
-        for (int x = 0; x < 3; x++) {
-            for (int z = 0; z < 3; z++) {
-                cubo[x][2][z] = CONSTANTES_BASE[i++];
-            }
-        }
-        
+        cubo[0][0][0] = (int) (contador >>> 32);
+        cubo[2][2][2] = (int) contador;
+
+        cubo[2][0][0] = nonce192[0];
+        cubo[0][2][0] = nonce192[1];
+        cubo[0][0][2] = nonce192[2];
+        cubo[2][2][0] = nonce192[3];
+        cubo[2][0][2] = nonce192[4];
+        cubo[0][2][2] = nonce192[5];
+
+        cubo[1][0][0] = CONSTANTES[0];
+        cubo[0][0][1] = CONSTANTES[1];
+        cubo[2][0][1] = CONSTANTES[2];
+        cubo[1][0][2] = CONSTANTES[3];
+
+        cubo[2][1][0] = CONSTANTES[4];
+        cubo[0][1][2] = CONSTANTES[5];
+        cubo[2][1][2] = CONSTANTES[6];
+
+        cubo[1][2][0] = CONSTANTES[7];
+        cubo[0][2][1] = CONSTANTES[8];
+        cubo[2][2][1] = CONSTANTES[9];
+        cubo[1][2][2] = CONSTANTES[10];
+
         return cubo;
     }
 
-    private long[][][] clonaCubo(long[][][] original){
-        long[][][] novoCubo = new long[3][3][3];
+    private int[][][] clonaCubo(int[][][] original){
+        int[][][] novoCubo = new int[3][3][3];
         for (int i=0; i<3; i++){
             for (int j=0; j<3; j++){
-                System.arraycopy(original[i][j], 0, novoCubo[i][j], 0, 3); // sugestão da IDE, não sabia que existia.
+                System.arraycopy(original[i][j], 0, novoCubo[i][j], 0, 3);
             }
         }
         return novoCubo;
     }
 
-    private long[][][] gerarKeystream(long[] chave, long[] nonce, long contador) {
-
-        long[][][] estadoOriginal = iniCubo(chave, nonce, contador);
+    private int[][][] gerarKeystream(int[] chave, int[] nonce, long contador) {
+        int[][][] estadoOriginal = iniCubo(chave, nonce, contador);
+        int[][][] keyStream = clonaCubo(estadoOriginal);
         
-        long[][][] keyStream = clonaCubo(estadoOriginal);
-        
-        for (int rodada = 0; rodada < 8; rodada++) {
-            for (int[] rota : this.trios) {
+        for (int rodada = 0; rodada < 4; rodada++) {
+            for (int[] trio : this.rota) {
 
-                long a = keyStream[rota[0]][rota[1]][rota[2]];
-                long b = keyStream[rota[3]][rota[4]][rota[5]];
-                long c = keyStream[rota[6]][rota[7]][rota[8]];
+                int a = keyStream[trio[0]][trio[1]][trio[2]];
+                int b = keyStream[trio[3]][trio[4]][trio[5]];
+                int c = keyStream[trio[6]][trio[7]][trio[8]];
                 
-                // ARX
-                a += b; c ^= a; c = Long.rotateLeft(c, 32);
-                a += c; b ^= a; b = Long.rotateLeft(b, 24);
-                a += b; c ^= a; c = Long.rotateLeft(c, 14);
-                a += c; b ^= a; b = Long.rotateLeft(b, 11);
+                a += b; c ^= a; c = Integer.rotateLeft(c, 16);
+                a += c; b ^= a; b = Integer.rotateLeft(b, 12);
+                a += b; c ^= a; c = Integer.rotateLeft(c, 8);
+                a += c; b ^= a; b = Integer.rotateLeft(b, 7);
                 
-                keyStream[rota[0]][rota[1]][rota[2]] = a;
-                keyStream[rota[3]][rota[4]][rota[5]] = b;
-                keyStream[rota[6]][rota[7]][rota[8]] = c;
+                keyStream[trio[0]][trio[1]][trio[2]] = a;
+                keyStream[trio[3]][trio[4]][trio[5]] = b;
+                keyStream[trio[6]][trio[7]][trio[8]] = c;
             }
         }
         
@@ -157,28 +129,28 @@ public class Cube{
         return keyStream;
     }
 
-    private byte[] processarDados(byte[] entrada, long[] chave, long[] nonce) {
-
+    private byte[] processarDados(byte[] entrada, int[] chave, int[] nonce) {
         byte[] saida = new byte[entrada.length];
         long contador = 0;        
-        long[][][] blocoKeystream = null;
+        int[][][] blocoKeystream = null;
 
         for (int i = 0; i < entrada.length; i++) {
-            int posNoBloco = i % 216;
+
+            int posNoBloco = i % 108;
 
             if (posNoBloco == 0) {
                 blocoKeystream = gerarKeystream(chave, nonce, contador);
                 contador++;
             }
 
-            int indicePalavra = posNoBloco / 8;
-            int indiceByte = posNoBloco % 8;
+            int indicePalavra = posNoBloco / 4;
+            int indiceByte = posNoBloco % 4;
 
             int z = indicePalavra / 9;
             int y = (indicePalavra % 9) / 3;
             int x = indicePalavra % 3;
 
-            long palavraAtual = blocoKeystream[x][y][z];
+            int palavraAtual = blocoKeystream[x][y][z];
             int shift = indiceByte * 8;
             byte byteDoKeystream = (byte) ((palavraAtual >>> shift) & 0xFF);
 
@@ -199,13 +171,13 @@ public class Cube{
         System.out.print("Opção escolhida: ");
     }
 
-    private static void decifraTexto(Cube c, long[] chave, byte[] cifrado){
+    private static void decifraTexto(Cube c, int[] chave, byte[] cifrado){
         if (chave!=null){
             if (cifrado!=null){
         
                 byte[] nonceBytes = new byte[24];
                 System.arraycopy(cifrado, 0, nonceBytes, 0, 24);
-                long[] nonceRecuperado = CriptoUtils.bytesParaLongs(nonceBytes);
+                int[] nonceRecuperado = CriptoUtils.bytesParaInts(nonceBytes);
 
                 byte[] cifradoPuro = new byte[cifrado.length - 24];
                 System.arraycopy(cifrado, 24, cifradoPuro, 0, cifradoPuro.length);
@@ -217,12 +189,12 @@ public class Cube{
         } else System.out.println("Chave privada não escolhida");
     }
     
-    private static byte[] cifrarTexto(Cube c, long[] chave, byte[] claro){
+    private static byte[] cifrarTexto(Cube c, int[] chave, byte[] claro){
         if (chave!=null){
             if (claro!=null){
 
-                long[] nonceSessao = CriptoUtils.gerarNonce192();
-                byte[] nonceBytes = CriptoUtils.longsParaBytes(nonceSessao);
+                int[] nonceSessao = CriptoUtils.gerarNonce192();
+                byte[] nonceBytes = CriptoUtils.intsParaBytes(nonceSessao);
 
                 byte[] cifradoPuro = c.processarDados(claro, chave, nonceSessao);
                 
@@ -245,14 +217,14 @@ public class Cube{
         return CriptoUtils.stringParaBytes(textoClaro);
     }
 
-    private static long[] escolherChavePrivada(Scanner scan){
+    private static int[] escolherChavePrivada(Scanner scan){
         System.out.println("Digite a opção desejada: ");
         System.out.println("0 - Escolher chave privada");
         System.out.println("1 - Gerar chave privada aleatória");
         System.out.print("Opção escolhida: ");
 
         int opc = scan.nextInt();
-        long[] chavePrivada = null;
+        int[] chavePrivada = null;
         while (chavePrivada==null){
             switch (opc){
                 
@@ -262,13 +234,13 @@ public class Cube{
                     String chaveStr = scan.nextLine();
                     chavePrivada = CriptoUtils.gerarChaveDaString(chaveStr);
                     System.out.print("Chave privada: ");
-                    CriptoUtils.printArrayLong(chavePrivada);
+                    CriptoUtils.printArrayInt(chavePrivada);
                 }
 
                 case 1 -> {
                     chavePrivada = CriptoUtils.gerarChavePrivada();
                     System.out.print("Chave privada gerada: ");
-                    CriptoUtils.printArrayLong(chavePrivada);
+                    CriptoUtils.printArrayInt(chavePrivada);
                 }
 
                 default ->{
@@ -288,7 +260,7 @@ public class Cube{
         Scanner scan = new Scanner(System.in);
         Cube cifraCubo = new Cube();
 
-        long[] chavePrivada = null;
+        int[] chavePrivada = null;
         byte[] msgClara = null;
         byte[] msgCifrada = null;
         
@@ -298,12 +270,12 @@ public class Cube{
             printMenu();
             opc = scan.nextInt();
             switch (opc){
-                case 0 -> chavePrivada=escolherChavePrivada(scan);
-                case 1 -> msgClara=escolherMsgClara(scan);
-                case 2 -> msgCifrada=cifrarTexto(cifraCubo, chavePrivada, msgClara);
+                case 0 -> chavePrivada = escolherChavePrivada(scan);
+                case 1 -> msgClara = escolherMsgClara(scan);
+                case 2 -> msgCifrada = cifrarTexto(cifraCubo, chavePrivada, msgClara);
                 case 3 -> decifraTexto(cifraCubo, chavePrivada, msgCifrada);
                 case 4 -> {}
-                default -> System.out.println("Opçaõ inválida");
+                default -> System.out.println("Opção inválida");
             }
         }
 

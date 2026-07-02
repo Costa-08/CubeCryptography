@@ -16,37 +16,38 @@ public class CriptoUtils {
         return new String(dados, StandardCharsets.UTF_8);
     }
 
-    public static long[] gerarChavePrivada(){
-        byte[] bytesChave = new byte[32];
+    public static int[] gerarChavePrivada(){
+        byte[] bytesChave = new byte[32]; // 256 bits
         RANDOM.nextBytes(bytesChave);
-        return bytesParaLongs(bytesChave);
+        return bytesParaInts(bytesChave);
     }
 
-    public static long[] gerarNonce192() {
-        byte[] bytesNonce = new byte[24];
+    public static int[] gerarNonce192() {
+        byte[] bytesNonce = new byte[24]; // 192 bits
         RANDOM.nextBytes(bytesNonce);        
-        return bytesParaLongs(bytesNonce);
+        return bytesParaInts(bytesNonce);
     }
 
-    public static long[] bytesParaLongs(byte[] bytes) {
-        if (bytes.length % 8 != 0) {
-            throw new IllegalArgumentException("O array de bytes deve ser múltiplo de 8.");
+    public static int[] bytesParaInts(byte[] bytes) {
+        if (bytes.length % 4 != 0) {
+            throw new IllegalArgumentException("O array de bytes deve ser múltiplo de 4.");
         }
-        long[] longs = new long[bytes.length / 8];
-        ByteBuffer.wrap(bytes).asLongBuffer().get(longs);
-        return longs;
+        int[] ints = new int[bytes.length / 4];
+        ByteBuffer.wrap(bytes).asIntBuffer().get(ints);
+        return ints;
     }
 
-    public static byte[] longsParaBytes(long[] longs) {
-        byte[] bytes = new byte[longs.length * 8];
-        ByteBuffer.wrap(bytes).asLongBuffer().put(longs);
+    public static byte[] intsParaBytes(int[] ints) {
+        byte[] bytes = new byte[ints.length * 4];
+        ByteBuffer.wrap(bytes).asIntBuffer().put(ints);
         return bytes;
     }
 
-    public static void printArrayLong(long[] array) {
+    public static void printArrayInt(int[] array) {
         System.out.print("[ ");
         for (int i = 0; i < array.length; i++) {
-            System.out.printf("0x%016X", array[i]);
+            // Imprime o int usando 8 caracteres hexadecimais
+            System.out.printf("0x%08X", array[i]);
             if (i < array.length - 1) {
                 System.out.print(", ");
             }
@@ -54,13 +55,11 @@ public class CriptoUtils {
         System.out.println(" ]");
     }
 
-    public static long[] gerarChaveDaString(String senhaUsuario) {
+    public static int[] gerarChaveDaString(String senhaUsuario) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            
             byte[] hashBytes = digest.digest(senhaUsuario.getBytes(StandardCharsets.UTF_8));
-            
-            return bytesParaLongs(hashBytes);
+            return bytesParaInts(hashBytes);
             
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("SHA-256 não encontrado", e);
@@ -78,5 +77,4 @@ public class CriptoUtils {
         }
         return hexString.toString().toUpperCase();
     }
-
 }
