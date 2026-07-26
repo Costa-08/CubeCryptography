@@ -46,7 +46,6 @@ public class CriptoUtils {
     public static void printArrayInt(int[] array) {
         System.out.print("[ ");
         for (int i = 0; i < array.length; i++) {
-            // Imprime o int usando 8 caracteres hexadecimais
             System.out.printf("0x%08X", array[i]);
             if (i < array.length - 1) {
                 System.out.print(", ");

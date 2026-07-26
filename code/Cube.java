@@ -2,37 +2,22 @@ import java.util.Scanner;
 
 public class Cube {
 
+    private final int numRodadas = 16;
+
     final int[][] rota = {
         
-        // ====================================================================
-        // FASE 1: VARREDURA ORTOGONAL X (Linhas Horizontais)
-        // Mistura a entropia estritamente da esquerda para a direita.
-        // ====================================================================
         {0,0,0, 1,0,0, 2,0,0}, {0,0,1, 1,0,1, 2,0,1}, {0,0,2, 1,0,2, 2,0,2},
         {0,1,0, 1,1,0, 2,1,0}, {0,1,1, 1,1,1, 2,1,1}, {0,1,2, 1,1,2, 2,1,2},
         {0,2,0, 1,2,0, 2,2,0}, {0,2,1, 1,2,1, 2,2,1}, {0,2,2, 1,2,2, 2,2,2},
 
-        // ====================================================================
-        // FASE 2: VARREDURA ORTOGONAL Y (Linhas Verticais)
-        // Esmaga a entropia gerada na Fase 1 estritamente de cima para baixo.
-        // ====================================================================
         {0,0,0, 0,1,0, 0,2,0}, {0,0,1, 0,1,1, 0,2,1}, {0,0,2, 0,1,2, 0,2,2},
         {1,0,0, 1,1,0, 1,2,0}, {1,0,1, 1,1,1, 1,2,1}, {1,0,2, 1,1,2, 1,2,2},
         {2,0,0, 2,1,0, 2,2,0}, {2,0,1, 2,1,1, 2,2,1}, {2,0,2, 2,1,2, 2,2,2},
 
-        // ====================================================================
-        // FASE 3: VARREDURA ORTOGONAL Z (Profundidade)
-        // Cruza a entropia acumulada estritamente da frente para trás.
-        // ====================================================================
         {0,0,0, 0,0,1, 0,0,2}, {0,1,0, 0,1,1, 0,1,2}, {0,2,0, 0,2,1, 0,2,2},
         {1,0,0, 1,0,1, 1,0,2}, {1,1,0, 1,1,1, 1,1,2}, {1,2,0, 1,2,1, 1,2,2},
         {2,0,0, 2,0,1, 2,0,2}, {2,1,0, 2,1,1, 2,1,2}, {2,2,0, 2,2,1, 2,2,2},
 
-        // ====================================================================
-        // FASE 4: DIAGONAIS TOROIDAIS ESPACIAIS (Wormholes Disjuntos)
-        // Quebra a simetria ortogonal cruzando os eixos X, Y e Z simultaneamente.
-        // Utiliza aritmética modular para garantir que as diagonais nunca se toquem.
-        // ====================================================================
         {0,0,0, 1,1,1, 2,2,2}, {0,0,1, 1,1,2, 2,2,0}, {0,0,2, 1,1,0, 2,2,1},
         {0,1,0, 1,2,1, 2,0,2}, {0,1,1, 1,2,2, 2,0,0}, {0,1,2, 1,2,0, 2,0,1},
         {0,2,0, 1,0,1, 2,1,2}, {0,2,1, 1,0,2, 2,1,0}, {0,2,2, 1,0,0, 2,1,1}
@@ -99,7 +84,7 @@ private int[][][] iniCubo(int[] chave256, int[] nonce192, long contador) {
         int[][][] estadoOriginal = iniCubo(chave, nonce, contador);
         int[][][] keyStream = clonaCubo(estadoOriginal);
         
-        for (int rodada = 0; rodada < 4; rodada++) {
+        for (int rodada = 0; rodada < this.numRodadas; rodada++) {
             for (int[] trio : this.rota) {
 
                 int a = keyStream[trio[0]][trio[1]][trio[2]];
