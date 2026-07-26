@@ -39,7 +39,7 @@ O principal diferencial desse projeto é, sem dúvidas, a nova proposta topológ
 
 3. **Executar:**
    ```bash
-   java -cp code Cube
+   java code.Cube
    ```
 
 
