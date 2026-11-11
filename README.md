@@ -46,4 +46,4 @@ O principal diferencial desse projeto é, sem dúvidas, a nova proposta topológ
 ## Considerações Finais
 
 * Este é um projeto acadêmico e não deve ser utilizado industrialmente.
-* Documentação completa pode ser encontrada no [Relatório](./Relatorio.pdf).
+* Documentação completa pode ser encontrada no [Relatório](./docs/Relatorio.pdf).
